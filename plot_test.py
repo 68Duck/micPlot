@@ -1,7 +1,21 @@
+import csv 
+
+def writer(fileToWrite,fileName):
+    with open(fileName, mode = "w", newline = "") as file:
+        writer = csv.writer(file)
+        for row in fileToWrite:
+            writer.writerow(row)
+
+
+
 def main():
-    mics = 5
+    mics = 14
     speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["A","B","C","D"],["C","H","I"]]
     speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]
+    speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #Could this be a problem to the algorithmn? 
+    speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
+    # mics = max([len(x) for x in speakingInScenesList])
+    mics = 20
     arr = []
     for i in range(len(speakingInScenesList)-1):
         arr.append(getMoves(speakingInScenesList[i], speakingInScenesList[i+1]))
@@ -10,13 +24,17 @@ def main():
     prettyPrint(parseArr(arr, mics), mics)
 
 def prettyPrint(scenes, mics):
-    reversed = [[None for i in range(5)] for i in range(5)]
+    reversed = [[None for i in range(len(scenes))] for i in range(mics)]
     for i in range(len(scenes)):
         for j in range(len(scenes[i])):
-            reversed[i][j] = scenes[j][i]
+            reversed[j][i] = scenes[i][j]
     
     for row in reversed:
-        print(" ".join([x if x is not None else " " for x in row]))
+        maxlen = max([len(x) if x is not None else 0 for x in row])
+        print(" | ".join([addSpaces(x, maxlen) if x is not None else " " for x in row]))
+
+def addSpaces(word, desiredLength): #not working yet. (This function works but is not implemented properly into prettyPrint)
+    return word + " ".join([" " for i in range(desiredLength - len(word))])
 
 
 def parseArr(arr, mics):
@@ -57,7 +75,11 @@ def parseArr(arr, mics):
                     if pools[k-2] > 0:
                         for v in arr[k]:
                             if v[0] == "pool" and v[1] == val[0]:
+                                prettyPrint(scenes, mics)
+                                if val[0] not in scenes[i]: 
+                                    scenes[i][scenes[i].index(None)] = val[0]
                                 row = scenes[i].index(val[0])
+
                                 for l in range(i+1, k+1, 1):
                                     scenes[l][row] = val[0]
                                     pools[l-1] -= 1 
@@ -69,6 +91,10 @@ def parseArr(arr, mics):
             if val[0] not in scenes[i] and val[0] != "pool":
                 # print(val)
                 # find the first avaliable slot
+                # print(scenes[i])
+                # print(scenes[i].index(None))
+                # print(scenes[i][scenes[i].index(None)])
+                # print(val[0])
                 scenes[i][scenes[i].index(None)] = val[0]
 
         for j, val in enumerate(sceneChange):
