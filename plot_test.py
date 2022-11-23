@@ -9,7 +9,7 @@ def writer(fileToWrite,fileName):
 
 
 def main():
-    mics = 9
+    mics = 33
     # speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["A","B","C","D"],["C","H","I"]]
     # speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #5 with 5 mics 
     # speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #5 with 5 mics
@@ -18,20 +18,28 @@ def main():
     # speakingInScenesList = [["test", "A", "B"], ["B", "test", "Char"], ["To", "idk"]]
     speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
     #Need to change priorities, otherwise can have mics never used at the bottom
-
-    # mics = max([len(x) for x in speakingInScenesList])
-    # mics = 5
+    speakingInScenesList = sortScenes(speakingInScenesList)
+    # mics = max([len(x) for x in speakingInScenesList]))
+    # print(speakingInScenesList)
     arr = []
     for i in range(len(speakingInScenesList)-1):
         arr.append(getMoves(speakingInScenesList[i], speakingInScenesList[i+1]))
 
     calcMinAndMaxMics(arr, speakingInScenesList)
 
-    # print(arr)
-    # parsedArr = parseArr(arr, mics)
-    # writer(reverseScenes(parsedArr,mics), "test.csv")
+    # print(arr[23])
+    # print(speakingInScenesList[23]) 
+    # print(speakingInScenesList[13]) #There is an issue with Zack here? Why is there a gap?
+    # print(speakingInScenesList[14])
+    # print(speakingInScenesList[15])
+
+    parsedArr = parseArr(arr, mics)
+    writer(reverseScenes(parsedArr,mics), "test.csv")
     # prettyPrint(parsedArr, mics)
     # print(calcChanges(parsedArr, mics))
+
+    # print(calcChanges(parsedArr, mics, True))
+    # print("test")
 
 def calcMinAndMaxMics(arr, speakingInScenesList):
     minMics = max([len(x) for x in speakingInScenesList])
@@ -45,15 +53,27 @@ def calcMinAndMaxMics(arr, speakingInScenesList):
     for i in range(minMics, maxMics + 1, 1): #it is +1 here since the look goes to max-1
         print(i, calcChanges(parseArr(arr, i), i))
 
-def calcChanges(parsedArr, mics): #Not in reversed form
+def sortScenes(speakingInScenesList):
+    sorted = []
+    for row in speakingInScenesList:
+        row.sort()
+        sorted.append(row)
+    return sorted
+
+def calcChanges(parsedArr, mics, perMic = False): #Not in reversed form
     reversed = reverseScenes(parsedArr, mics)
     total = 0 
+    totals = []
     for row in reversed:
+        subTotal = 0
         r = [x for x in row if x is not None]
         for i in range(len(r)-1):
             if r[i] != r[i+1]:
                 total += 1
-    return total 
+                subTotal += 1
+        totals.append(subTotal)
+    return totals if perMic else total 
+
 
 def reverseScenes(scenes, mics):
     reversed = [[None for i in range(len(scenes))] for i in range(mics)]
@@ -92,7 +112,6 @@ def parseArr(arr, mics):
                 pool -= 1
         pools.append(pool)
     pools[-1] = mics #since the order of the last one does not need to be checked (doesn't matter if there is space in the pool or not)
-
     for i, sceneChange in enumerate(arr):
         toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and x not in scenes[i+1]] #so only gets in the form ["char", "pool"] that is not in the scene already
         toPutIn = sortByPriority(arr, i, toPutIn, pools, scenes)
@@ -115,11 +134,14 @@ def parseArr(arr, mics):
                         input = True
                         break
                 if not input:
-                    scenes[i][scenes[i].index(None)] = val[0] #if not it adds it to the first empty slot
-                #THIS IS NOT OPTIMISED 
+                    scenes[i][scenes[i].index(None)] = val[0] #if not it adds it to the first empty slot 
             if distance is not None: #checks if we need to add any more chars to the scenes
+                valid = True 
                 for j in range(distance+1):
-                    if pools[i+j] > 0:
+                    if pools[i+j] <= 0:
+                        valid = False
+                if valid:
+                    for j in range(distance+1):
                         scenes[i+j+1][scenes[i].index(val[0])] = val[0] #it is i+j+1 since j is zero indexed 
                         pools[i+j] -= 1
             toPutIn.remove(val)
@@ -162,6 +184,7 @@ def parseArr(arr, mics):
                     break
             if not input:
                 scenes[-1][scenes[-1].index(None)] = val[1] #if not it adds it to the first empty slot
+
     return scenes
 
 def sortByPriority(arr, sceneChangeNumber, toPutIn, pools, scenes): #sceneChangeNumber is 0 indexed
