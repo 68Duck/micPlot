@@ -80,19 +80,15 @@ def parseArr(arr, mics):
         pools.append(pool)
 
     pools[-1] = mics #since the order of the last one does not need to be checked (doesn't matter if there is space in the pool or not)
-    print(pools)
 
     for i, sceneChange in enumerate(arr):
         # toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and s == "pool" and x not in scenes[i+1]] #so only gets in the form ["char", "pool"] that is not in the scene already
         toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and x not in scenes[i+1]] #so only gets in the form ["char", "pool"] that is not in the scene already
-        print(toPutIn)
         toPutIn = sortByPriority(arr, i, toPutIn, pools, scenes)
-        print(toPutIn)
         while len(toPutIn) > 0:
             val = toPutIn[0]
             distance = getDistanceOfNoSwaps(val, arr, i, pools, scenes)
             if val[0] not in scenes[i]: #checks if the char is already in the scene
-                print(val[0], "test")
                 scenes[i][scenes[i].index(None)] = val[0] #if not it adds it to the first empty slot
                 #THIS IS NOT OPTIMISED 
             if distance is not None: #checks if we need to add any more chars to the scenes
@@ -101,48 +97,17 @@ def parseArr(arr, mics):
                         scenes[i+j+1][scenes[i].index(val[0])] = val[0] #it is i+j+1 since j is zero indexed 
                         pools[i+j] -= 1
             toPutIn.remove(val)
-            print(val)
-            print(pools)
-            print(scenes)
 
         for val in toPutIn:
             if val not in scenes[i]:
-                print(val)
                 scenes[i][scenes[i].index(None)] = val
 
         coppies = [x for [x,s] in sceneChange if x == s]
         for coppy in coppies:
             scenes[i+1][scenes[i].index(coppy)] = coppy
 
-        # for j, val in enumerate(sceneChange):
-
-
-    # for i, sceneChange in enumerate(arr):  #iterate through the scene changes
-    #     for j, val in enumerate(sceneChange):
-    #         if val[1] == "pool" and val[0] != "pool":
-    #             for k in range(i+1, len(arr), 1):
-    #                 if pools[k-2] > 0:
-    #                     for v in arr[k]:
-    #                         if v[0] == "pool" and v[1] == val[0]:
-    #                             if val[0] not in scenes[i]: 
-    #                                 scenes[i][scenes[i].index(None)] = val[0]
-    #                             row = scenes[i].index(val[0])
-
-    #                             for l in range(i+1, k+1, 1):
-    #                                 scenes[l][row] = val[0]
-    #                                 pools[l-1] -= 1 
-
-
-    #     for n, val in enumerate(sceneChange):
-    #         if val[0] not in scenes[i] and val[0] != "pool":
-    #             scenes[i][scenes[i].index(None)] = val[0]
-
-    #     for j, val in enumerate(sceneChange):
-    #         if val[0] == val[1]:
-    #             scenes[i+1][scenes[i].index(val[0])] = val[0]
-
     #add any extras that were not added to the last scene
-    lastSceneChange = arr[-1]  #NOT CORRECT SINCE ONLY CHECKS LAST ONE. FIX ME! (Has I think been fixed by setting the last element of pools to the max)
+    lastSceneChange = arr[-1]  
     for i,val in enumerate(lastSceneChange):
         if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
             if len(scenes) > 1:
@@ -163,9 +128,7 @@ def sortByPriority(arr, sceneChangeNumber, toPutIn, pools, scenes): #sceneChange
         distance = getDistanceOfNoSwaps(item, arr, sceneChangeNumber, pools, scenes)
         if distance is not None:
             toBeSortedQueue.append([distance, item])
-    print(toBeSortedQueue)
     sortedQueue = sortByFirst(toBeSortedQueue)
-    print(sortedQueue)
     for item in toPutIn:
         if item not in sortedQueue: #so was a None in the distance formula, so it should be at the end
             sortedQueue.append(item)
