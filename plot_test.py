@@ -67,24 +67,6 @@ def addSpaces(word, desiredLength): #not working yet. (This function works but i
 
 
 def parseArr(arr, mics):
-    # first = []
-    # for val in arr[0]:
-    #     [a,b] = val
-    #     if a is not "pool":
-    #         first.append(a)
-
-    # for i in range(mics - len(first)):
-    #     first.append(None)
-
-    # scenes = [first]
-
-    # for sceneChange in arr:
-    #     nextScene = [None] * mics
-    #     for val in sceneChange:
-    #         if val[0] == val[1] and val[0] in scenes[-1]:
-    #             nextScene[scenes[-1].index(val[0])] = val[0]
-    #     scenes.append(nextScene)
-    
     scenes = [[None for i in range(mics)] for i in range(len(arr) + 1)]
     pools = []
 
@@ -101,11 +83,9 @@ def parseArr(arr, mics):
         for j, val in enumerate(sceneChange):
             if val[1] == "pool" and val[0] != "pool":
                 for k in range(i+1, len(arr), 1):
-                    # print(k, pools[k-1])
                     if pools[k-2] > 0:
                         for v in arr[k]:
                             if v[0] == "pool" and v[1] == val[0]:
-                                # prettyPrint(scenes, mics)
                                 if val[0] not in scenes[i]: 
                                     scenes[i][scenes[i].index(None)] = val[0]
                                 row = scenes[i].index(val[0])
@@ -113,23 +93,14 @@ def parseArr(arr, mics):
                                 for l in range(i+1, k+1, 1):
                                     scenes[l][row] = val[0]
                                     pools[l-1] -= 1 
-                                    # print(pools, "pools")
 
 
         for n, val in enumerate(sceneChange):
-            # print(scenes[i])
             if val[0] not in scenes[i] and val[0] != "pool":
-                # print(val)
-                # find the first avaliable slot
-                # print(scenes[i])
-                # print(scenes[i].index(None))
-                # print(scenes[i][scenes[i].index(None)])
-                # print(val[0])
                 scenes[i][scenes[i].index(None)] = val[0]
 
         for j, val in enumerate(sceneChange):
             if val[0] == val[1]:
-                # print(scenes[i])
                 scenes[i+1][scenes[i].index(val[0])] = val[0]
 
     #add any extras that were not added to the last scene
