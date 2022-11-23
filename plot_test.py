@@ -16,7 +16,7 @@ def main():
     speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F","D"],["B","C"],["A","H","C","D","I"]]   #5 mics has 5 changes, 6->3, 7->2, 8->1, (9+)->0
     # speakingInScenesList = [["D","C","B","E"],["A","C","F","G"],["C","F","D"],["C","B"],["A","H","C","D","I"]]   #5 with 5 mics
     # speakingInScenesList = [["test", "A", "B"], ["B", "test", "Char"], ["To", "idk"]]
-    # speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
+    speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
     #Need to change priorities, otherwise can have mics never used at the bottom
 
     # mics = max([len(x) for x in speakingInScenesList])
@@ -27,11 +27,11 @@ def main():
 
     calcMinAndMaxMics(arr, speakingInScenesList)
 
-    print(arr)
-    parsedArr = parseArr(arr, mics)
-    writer(reverseScenes(parsedArr,mics), "test.csv")
-    prettyPrint(parsedArr, mics)
-    print(calcChanges(parsedArr, mics))
+    # print(arr)
+    # parsedArr = parseArr(arr, mics)
+    # writer(reverseScenes(parsedArr,mics), "test.csv")
+    # prettyPrint(parsedArr, mics)
+    # print(calcChanges(parsedArr, mics))
 
 def calcMinAndMaxMics(arr, speakingInScenesList):
     minMics = max([len(x) for x in speakingInScenesList])
@@ -94,7 +94,7 @@ def parseArr(arr, mics):
     pools[-1] = mics #since the order of the last one does not need to be checked (doesn't matter if there is space in the pool or not)
 
     for i, sceneChange in enumerate(arr):
-        toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and x not in scenes[i]] #so only gets in the form ["char", "pool"] that is not in the scene already
+        toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and x not in scenes[i+1]] #so only gets in the form ["char", "pool"] that is not in the scene already
         toPutIn = sortByPriority(arr, i, toPutIn, pools, scenes)
         while len(toPutIn) > 0:
             val = toPutIn[0]
@@ -131,7 +131,8 @@ def parseArr(arr, mics):
 
         coppies = [x for [x,s] in sceneChange if x == s]
         for coppy in coppies:
-            scenes[i+1][scenes[i].index(coppy)] = coppy
+            if coppy not in scenes[i+1]:
+                scenes[i+1][scenes[i].index(coppy)] = coppy
 
     #add any extras that were not added to the last scene
     lastSceneChange = arr[-1]  
