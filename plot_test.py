@@ -13,7 +13,8 @@ def main():
     speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["A","B","C","D"],["C","H","I"]]
     speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]
     speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #Could this be a problem to the algorithmn? 
-    speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
+    speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F","D"],["B","C"],["A","D","C","H","I"]]  #Could this be a problem to the algorithmn? 
+    # speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
     #Need to change priorities, otherwise can have mics never used at the bottom
     
     # mics = max([len(x) for x in speakingInScenesList])
@@ -24,9 +25,21 @@ def main():
     # print(arr)
     # print(parseArr(arr,mics))
     # prettyPrint(parseArr(arr, mics), mics)
+    print(arr)
+    parsedArr = parseArr(arr, mics)
+    writer(reverseScenes(parsedArr,mics), "test.csv")
+    prettyPrint(parsedArr, mics)
+    print(calcChanges(parsedArr, mics))
 
-    writer(reverseScenes(parseArr(arr,mics),mics), "test.csv")
-    prettyPrint(parseArr(arr, mics), mics)
+def calcChanges(parsedArr, mics): #Not in reversed form
+    reversed = reverseScenes(parsedArr, mics)
+    total = 0 
+    for row in reversed:
+        r = [x for x in row if x is not None]
+        for i in range(len(row)-2):
+            if row[i] != row[i+1]:
+                total += 1
+    return total 
 
 def reverseScenes(scenes, mics):
     reversed = [[None for i in range(len(scenes))] for i in range(mics)]
@@ -52,24 +65,25 @@ def addSpaces(word, desiredLength): #not working yet. (This function works but i
 
 
 def parseArr(arr, mics):
-    first = []
-    for val in arr[0]:
-        [a,b] = val
-        if a is not "pool":
-            first.append(a)
+    # first = []
+    # for val in arr[0]:
+    #     [a,b] = val
+    #     if a is not "pool":
+    #         first.append(a)
 
-    for i in range(mics - len(first)):
-        first.append(None)
+    # for i in range(mics - len(first)):
+    #     first.append(None)
 
-    scenes = [first]
+    # scenes = [first]
 
-    for sceneChange in arr:
-        nextScene = [None] * mics
-        for val in sceneChange:
-            if val[0] == val[1] and val[0] in scenes[-1]:
-                nextScene[scenes[-1].index(val[0])] = val[0]
-        scenes.append(nextScene)
-
+    # for sceneChange in arr:
+    #     nextScene = [None] * mics
+    #     for val in sceneChange:
+    #         if val[0] == val[1] and val[0] in scenes[-1]:
+    #             nextScene[scenes[-1].index(val[0])] = val[0]
+    #     scenes.append(nextScene)
+    
+    scenes = [[None for i in range(mics)] for i in range(len(arr) + 1)]
     pools = []
 
     pool = 0
