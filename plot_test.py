@@ -9,14 +9,14 @@ def writer(fileToWrite,fileName):
 
 
 def main():
-    mics = 16
+    mics = 9
     # speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["A","B","C","D"],["C","H","I"]]
     # speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #5 with 5 mics 
     # speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #5 with 5 mics
-    # speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F","D"],["B","C"],["A","H","C","D","I"]]   #5 mics has 5 changes, 6->3, 7->2, 8->1, (9+)->0
+    speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F","D"],["B","C"],["A","H","C","D","I"]]   #5 mics has 5 changes, 6->3, 7->2, 8->1, (9+)->0
     # speakingInScenesList = [["D","C","B","E"],["A","C","F","G"],["C","F","D"],["C","B"],["A","H","C","D","I"]]   #5 with 5 mics
     # speakingInScenesList = [["test", "A", "B"], ["B", "test", "Char"], ["To", "idk"]]
-    speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
+    # speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
     #Need to change priorities, otherwise can have mics never used at the bottom
 
     # mics = max([len(x) for x in speakingInScenesList])
@@ -25,9 +25,9 @@ def main():
     for i in range(len(speakingInScenesList)-1):
         arr.append(getMoves(speakingInScenesList[i], speakingInScenesList[i+1]))
 
-    # calcMinAndMaxMics(arr, speakingInScenesList)
+    calcMinAndMaxMics(arr, speakingInScenesList)
 
-    # print(arr)
+    print(arr)
     parsedArr = parseArr(arr, mics)
     writer(reverseScenes(parsedArr,mics), "test.csv")
     prettyPrint(parsedArr, mics)
@@ -135,11 +135,11 @@ def parseArr(arr, mics):
 
     #add any extras that were not added to the last scene
     lastSceneChange = arr[-1]  
-    for i,val in enumerate(lastSceneChange): #Dont think this will ever make a difference now
-        if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
-            if len(scenes) > 1:
-                if val[1] in scenes[-2]:
-                    scenes[-1][scenes[-2].index(val[1])] = val[1]
+    # for i,val in enumerate(lastSceneChange): #Dont think this will ever make a difference now
+    #     if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
+    #         if len(scenes) > 1:
+    #             if val[1] in scenes[-2]:
+    #                 scenes[-1][scenes[-2].index(val[1])] = val[1]
 
     for i,val in enumerate(lastSceneChange):
         if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
