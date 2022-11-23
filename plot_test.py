@@ -37,8 +37,8 @@ def calcChanges(parsedArr, mics): #Not in reversed form
     total = 0 
     for row in reversed:
         r = [x for x in row if x is not None]
-        for i in range(len(row)-2):
-            if row[i] != row[i+1]:
+        for i in range(len(r)-1):
+            if r[i] != r[i+1]:
                 total += 1
     return total 
 
@@ -70,7 +70,7 @@ def parseArr(arr, mics):
     scenes = [[None for i in range(mics)] for i in range(len(arr) + 1)]
     pools = []
 
-    pool = 0
+    pool = mics - len([1 for [a,b] in arr[0] if a != "pool"])
     for sceneChange in arr:
         for val in sceneChange:
             if val[1] == "pool":
@@ -79,39 +79,110 @@ def parseArr(arr, mics):
                 pool -= 1
         pools.append(pool)
 
-    for i, sceneChange in enumerate(arr):  #iterate through the scene changes
-        for j, val in enumerate(sceneChange):
-            if val[1] == "pool" and val[0] != "pool":
-                for k in range(i+1, len(arr), 1):
-                    if pools[k-2] > 0:
-                        for v in arr[k]:
-                            if v[0] == "pool" and v[1] == val[0]:
-                                if val[0] not in scenes[i]: 
-                                    scenes[i][scenes[i].index(None)] = val[0]
-                                row = scenes[i].index(val[0])
+    print(pools)
 
-                                for l in range(i+1, k+1, 1):
-                                    scenes[l][row] = val[0]
-                                    pools[l-1] -= 1 
+    for i, sceneChange in enumerate(arr):
+        # toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and s == "pool" and x not in scenes[i+1]] #so only gets in the form ["char", "pool"] that is not in the scene already
+        toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and x not in scenes[i+1]] #so only gets in the form ["char", "pool"] that is not in the scene already
+        print(toPutIn)
+        toPutIn = sortByPriority(arr, i, toPutIn, pools, scenes)
+        print(toPutIn)
+        while len(toPutIn) > 0:
+            val = toPutIn[0]
+            distance = getDistanceOfNoSwaps(val, arr, i, pools, scenes)
+            if val[0] not in scenes[i]: #checks if the char is already in the scene
+                print(val[0], "test")
+                scenes[i][scenes[i].index(None)] = val[0] #if not it adds it to the first empty slot
+            if distance is not None: #checks if we need to add any more chars to the scenes
+                for j in range(distance):
+                    if pools[i+j] > 0:
+                        scenes[i+j+1][scenes[i].index(val[0])] = val[0] #it is i+j+1 since j is zero indexed 
+                        pools[i+j] -= 1
+            toPutIn.remove(val)
+            print(val)
+            print(pools)
+            print(scenes)
+
+        for val in toPutIn:
+            if val not in scenes[i]:
+                print(val)
+                scenes[i][scenes[i].index(None)] = val
+
+        coppies = [x for [x,s] in sceneChange if x == s]
+        for coppy in coppies:
+            scenes[i+1][scenes[i].index(coppy)] = coppy
+
+        # for j, val in enumerate(sceneChange):
 
 
-        for n, val in enumerate(sceneChange):
-            if val[0] not in scenes[i] and val[0] != "pool":
-                scenes[i][scenes[i].index(None)] = val[0]
+    # for i, sceneChange in enumerate(arr):  #iterate through the scene changes
+    #     for j, val in enumerate(sceneChange):
+    #         if val[1] == "pool" and val[0] != "pool":
+    #             for k in range(i+1, len(arr), 1):
+    #                 if pools[k-2] > 0:
+    #                     for v in arr[k]:
+    #                         if v[0] == "pool" and v[1] == val[0]:
+    #                             if val[0] not in scenes[i]: 
+    #                                 scenes[i][scenes[i].index(None)] = val[0]
+    #                             row = scenes[i].index(val[0])
 
-        for j, val in enumerate(sceneChange):
-            if val[0] == val[1]:
-                scenes[i+1][scenes[i].index(val[0])] = val[0]
+    #                             for l in range(i+1, k+1, 1):
+    #                                 scenes[l][row] = val[0]
+    #                                 pools[l-1] -= 1 
+
+
+    #     for n, val in enumerate(sceneChange):
+    #         if val[0] not in scenes[i] and val[0] != "pool":
+    #             scenes[i][scenes[i].index(None)] = val[0]
+
+    #     for j, val in enumerate(sceneChange):
+    #         if val[0] == val[1]:
+    #             scenes[i+1][scenes[i].index(val[0])] = val[0]
 
     #add any extras that were not added to the last scene
-    lastSceneChange = arr[-1]
+    lastSceneChange = arr[-1]  #NOT CORRECT SINCE ONLY CHECKS LAST ONE. FIX ME!
     for i,val in enumerate(lastSceneChange):
         if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
-            #find the first avaliable slot
+            if len(scenes) > 1:
+                if val[1] in scenes[-2]:
+                    scenes[-1][scenes[-2].index(val[1])] = val[1]
+
+    for i,val in enumerate(lastSceneChange):
+        if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
+            #find the first avaliable slot 
             scenes[-1][scenes[-1].index(None)] = val[1]
 
 
     return scenes
+
+def sortByPriority(arr, sceneChangeNumber, toPutIn, pools, scenes): #sceneChangeNumber is 0 indexed
+    toBeSortedQueue = []
+    for item in toPutIn:
+        distance = getDistanceOfNoSwaps(item, arr, sceneChangeNumber, pools, scenes)
+        if distance is not None:
+            toBeSortedQueue.append([distance, item])
+    print(toBeSortedQueue)
+    sortedQueue = sortByFirst(toBeSortedQueue)
+    print(sortedQueue)
+    for item in toPutIn:
+        if item not in sortedQueue: #so was a None in the distance formula, so it should be at the end
+            sortedQueue.append(item)
+
+    return sortedQueue
+
+def sortByFirst(arr): #This should sort by the first index of the list and then return an ordered list of the second indexes
+    result = sorted(arr, key = lambda x: x[0], reverse=True)
+    return [x for [_, x] in result]
+
+def getDistanceOfNoSwaps(item, arr, sceneChangeNumber, pools, scenes): #sceneChangeNumber is 0 indexed
+    for i in range(sceneChangeNumber + 1, len(arr), 1):
+        if pools[i] > 0:
+            for v in arr[i]:
+                if v[0] == "pool" and v[1] == item[0]:
+                    if item[0] not in scenes[i]:
+                        return i - sceneChangeNumber
+    return None #because this should be at the end of the priority queue no matter how we sort it.
+
 
 def getMoves(scene, next):
     arr = []
