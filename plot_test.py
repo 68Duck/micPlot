@@ -28,9 +28,6 @@ def main():
     # calcMinAndMaxMics(arr, speakingInScenesList)
 
     # print(arr)
-    print(arr[16])
-    print(arr[17])
-    print(speakingInScenesList[17])
     parsedArr = parseArr(arr, mics)
     writer(reverseScenes(parsedArr,mics), "test.csv")
     prettyPrint(parsedArr, mics)
@@ -98,7 +95,6 @@ def parseArr(arr, mics):
 
     for i, sceneChange in enumerate(arr):
         toPutIn = [[x,s] for [x,s] in sceneChange if x != "pool" and x not in scenes[i]] #so only gets in the form ["char", "pool"] that is not in the scene already
-        print(toPutIn)
         toPutIn = sortByPriority(arr, i, toPutIn, pools, scenes)
         while len(toPutIn) > 0:
             val = toPutIn[0]
@@ -128,7 +124,6 @@ def parseArr(arr, mics):
                         pools[i+j] -= 1
             toPutIn.remove(val)
 
-        print(toPutIn)
         for val in toPutIn:
             if val not in scenes[i]:
                 scenes[i][scenes[i].index(None)] = val
@@ -136,8 +131,6 @@ def parseArr(arr, mics):
 
         coppies = [x for [x,s] in sceneChange if x == s]
         for coppy in coppies:
-            writer(reverseScenes(scenes,mics),"test2.csv")
-            # print(i, scenes[i], coppy)
             scenes[i+1][scenes[i].index(coppy)] = coppy
 
     #add any extras that were not added to the last scene
@@ -180,8 +173,6 @@ def sortByPriority(arr, sceneChangeNumber, toPutIn, pools, scenes): #sceneChange
     for item in toPutIn:
         if item not in sortedQueue: #so was a None in the distance formula, so it should be at the end
             sortedQueue.append(item)
-
-    print(len(toPutIn), len(sortedQueue))
 
     return sortedQueue
 
