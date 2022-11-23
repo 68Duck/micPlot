@@ -9,17 +9,17 @@ def writer(fileToWrite,fileName):
 
 
 def main():
-    mics = 14
-    speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["A","B","C","D"],["C","H","I"]]
-    speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]
-    speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #Could this be a problem to the algorithmn? 
-    speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F","D"],["B","C"],["A","D","C","H","I"]]  #Could this be a problem to the algorithmn? 
+    mics = 9
+    # speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["A","B","C","D"],["C","H","I"]]
+    # speakingInScenesList = [["A","B","C","D","E"],["C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #5 with 5 mics 
+    # speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F"],["B","C","D"],["A","D","C","H","I"]]  #5 with 5 mics
+    speakingInScenesList = [["B","C","D","E"],["A","C","F","G"],["C","F","D"],["B","C"],["A","H","C","D","I"]]   #5 with 5 mics
     # speakingInScenesList = [["test", "A", "B"], ["B", "test", "Char"], ["To", "idk"]]
     # speakingInScenesList = [['Heath', 'Dewey', 'Theo', 'Ashwin', 'Harry'], ['Ned', 'Patty', 'Dewey'], ['Dewey', 'Ned'], ['Dewey', 'Heath', 'Theo', 'Louis'], ['Sophie', 'Shonelle', 'Dewey'], ['Dewey', 'Felix'], ['Dewey'], ['Dewey', 'Rosalie'], ['Rosalie', 'Heath', 'Zack', 'Summer', 'Hannah', 'Will Tackley', 'Noah', 'Louis', 'Amelia'], ['Rosalie'], ['Dewey', 'Rosalie', 'Ms Sheinkopf'], ['Dewey', 'Rosalie', 'Lucy', 'Louis'], ['Dewey', 'Rosalie', 'Ms Sheinkopf', 'Summer', 'Lawrence', 'Freddy', 'Zack'], ['Dewey', 'Ned', 'Patty'], ['Dewey', 'Gabe'], ['Rosalie'], ['Rosalie', 'Summer'], ['Dewey', 'Summer', 'Lawrence', 'Marcy', 'Zack', 'Katie', 'Freddy', 'James', 'Shonelle', 'Billy', 'Madison', 'Mason', 'Sophie', 'Tomika'], ['Felix', 'Freddy', 'Rajun', 'Billy', 'Tomika', 'Will Tackley', 'Noah', 'Heath', 'Zack'], ['Zack', 'Billy', 'Freddy', 'Lawrence', 'Madison', 'Shonelle', 'Mason'], ['Dewey', 'Marcy', 'Mason', 'Billy', 'Summer', 'Lawrence', 'Shonelle', 'Freddy', 'Zack'], ['Gabe', 'Hannah', 'Lucy', 'Ms Sheinkopf', 'Will Tackley', 'Leah', 'Noah', 'Rosie', 'Felix', 'Dewey', 'Rosalie', 'Louis'], ['Dewey', 'Rosalie', 'Gabe', 'Ms Sheinkopf'], ['Dewey', 'Shonelle', 'Marcy', 'Freddy', 'Zack', 'Mason', 'Summer', 'Billy', 'Lawrence', 'Katie', 'James', 'Rosalie', 'Sophie', 'Madison'], ['Dewey', 'Zack'], ['Mason', 'Dewey', 'Summer', 'Zack', 'Marcy', 'Lawrence', 'Rajun', 'Shonelle', 'Tomika']]
     #Need to change priorities, otherwise can have mics never used at the bottom
 
     # mics = max([len(x) for x in speakingInScenesList])
-    mics = 5
+    # mics = 5
     arr = []
     for i in range(len(speakingInScenesList)-1):
         arr.append(getMoves(speakingInScenesList[i], speakingInScenesList[i+1]))
@@ -79,6 +79,7 @@ def parseArr(arr, mics):
                 pool -= 1
         pools.append(pool)
 
+    pools[-1] = mics #since the order of the last one does not need to be checked (doesn't matter if there is space in the pool or not)
     print(pools)
 
     for i, sceneChange in enumerate(arr):
@@ -93,6 +94,7 @@ def parseArr(arr, mics):
             if val[0] not in scenes[i]: #checks if the char is already in the scene
                 print(val[0], "test")
                 scenes[i][scenes[i].index(None)] = val[0] #if not it adds it to the first empty slot
+                #THIS IS NOT OPTIMISED 
             if distance is not None: #checks if we need to add any more chars to the scenes
                 for j in range(distance):
                     if pools[i+j] > 0:
@@ -140,7 +142,7 @@ def parseArr(arr, mics):
     #             scenes[i+1][scenes[i].index(val[0])] = val[0]
 
     #add any extras that were not added to the last scene
-    lastSceneChange = arr[-1]  #NOT CORRECT SINCE ONLY CHECKS LAST ONE. FIX ME!
+    lastSceneChange = arr[-1]  #NOT CORRECT SINCE ONLY CHECKS LAST ONE. FIX ME! (Has I think been fixed by setting the last element of pools to the max)
     for i,val in enumerate(lastSceneChange):
         if val[0] == "pool" and val[1] not in scenes[-1]: #so has not already been added 
             if len(scenes) > 1:
